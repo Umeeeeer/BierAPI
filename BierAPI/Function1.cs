@@ -14,6 +14,7 @@ namespace BierAPI
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequestMessage req, TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
+            log.Info("TESTETEST");
 
             // parse query parameter
             string name = req.GetQueryNameValuePairs()
@@ -29,7 +30,7 @@ namespace BierAPI
 
             return name == null
                 ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
-                : req.CreateResponse(HttpStatusCode.OK, "Hello " + name);
+                : req.CreateResponse(HttpStatusCode.OK, "Hello wanker " + name);
         }
     }
 }
