@@ -5,32 +5,60 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using GoogleMaps.LocationServices;
+using System;
 
 namespace BierAPI
 {
     public static class GetMap
     {
         [FunctionName("GetMap")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequestMessage req, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]HttpRequestMessage req, TraceWriter log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
-            log.Info("TESTETEST");
+            //Get streetname from query parameter
+            string city = req.GetQueryNameValuePairs()
+                .FirstOrDefault(q => string.Compare(q.Key, "city", true) == 0)
+                .Value;
+        
+            if (city == null)
+            {
+                dynamic data = await req.Content.ReadAsAsync<object>();
+                city = data?.city;
+            }
 
-            // parse query parameter
-            string name = req.GetQueryNameValuePairs()
-                .FirstOrDefault(q => string.Compare(q.Key, "name", true) == 0)
+            //Get country from query parameter
+            string country = req.GetQueryNameValuePairs()
+                .FirstOrDefault(q => string.Compare(q.Key, "country", true) == 0)
                 .Value;
 
-            if (name == null)
+            if (country == null)
             {
                 // Get request body
                 dynamic data = await req.Content.ReadAsAsync<object>();
-                name = data?.name;
+                country = data?.country;
             }
 
-            return name == null
-                ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
-                : req.CreateResponse(HttpStatusCode.OK, "Hello wanker " + name);
+            //Als er geen land is ingevuld direct een foutmelding geven
+            if(country == null)
+            {
+                return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass the countryname on the query string or in the request body");
+            }
+
+            //Als er geen stad is ingevuld direct een foutmelding geven
+            else if(city == null)
+            {
+                return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass the city on the query string or in the request body");
+            }
+
+            else
+            {
+                string address = String.Format("{0}, {1}", city, country);
+                var locationService = new GoogleLocationService();
+                var point = locationService.GetLatLongFromAddress(address);
+                var latitude = point.Latitude;
+                var longtitude = point.Longitude;
+                return req.CreateResponse(HttpStatusCode.OK, "Lat: " + latitude + "Long: " + longtitude);
+            }
         }
     }
 }
