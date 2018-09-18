@@ -20,7 +20,6 @@ namespace BierAPI
         {
             var latitude = "";
             var longtitude = "";
-            string blobname = "";
 
             Random random = new Random();
 
@@ -113,8 +112,7 @@ namespace BierAPI
                                     await container.CreateIfNotExistsAsync();
 
                                     // create a blob in the path of the <container>/email/guid
-                                    blobname = String.Format("Mapgeneratedfrom-{0},{1}-at-{2}.png", country, city, DateTime.Now.ToFileTime());
-                                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobname);
+                                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(String.Format("Mapgeneratedfrom-{0},{1}-at-{2}.png", country, city, DateTime.Now.ToFileTime());
 
                                     await blockBlob.UploadFromStreamAsync(responseStream);
                                 }
@@ -124,11 +122,11 @@ namespace BierAPI
 
                     else
                     {
-                        return req.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, "Service currently unavailable, please try again later.");
+                        return req.CreateErrorResponse(HttpStatusCode.ServiceUnavailable, "Service currently unavailable, please try again later!");
                     }
                 }
 
-                return req.CreateResponse(HttpStatusCode.OK, "This is your link: https://kanikhierbierdr92ec.blob.core.windows.net/mapblob/" + blobname);
+                return req.CreateResponse(HttpStatusCode.OK, "This is your link: https://kanikhierbierdr92ec.blob.core.windows.net/mapblob/" + String.Format("Mapgeneratedfrom-{0},{1}-at-{2}.png", country, city, DateTime.Now.ToFileTime());
             }
         }
     }
