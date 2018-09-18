@@ -112,7 +112,7 @@ namespace BierAPI
                                     await container.CreateIfNotExistsAsync();
 
                                     // create a blob in the path of the <container>/email/guid
-                                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(String.Format("Mapgeneratedfrom-{0},{1}-at-{2}.png", country, city, DateTime.Now.ToFileTime());
+                                    CloudBlockBlob blockBlob = container.GetBlockBlobReference(String.Format("Mapgeneratedfrom-{0},{1}-at-{2}.png", country, city, DateTime.Now.ToFileTime()));
 
                                     await blockBlob.UploadFromStreamAsync(responseStream);
                                 }
@@ -126,7 +126,7 @@ namespace BierAPI
                     }
                 }
 
-                return req.CreateResponse(HttpStatusCode.OK, "This is your link: https://kanikhierbierdr92ec.blob.core.windows.net/mapblob/" + String.Format("Mapgeneratedfrom-{0},{1}-at-{2}.png", country, city, DateTime.Now.ToFileTime());
+                return req.CreateResponse(HttpStatusCode.OK, "This is your link: https://kanikhierbierdr92ec.blob.core.windows.net/mapblob/" + String.Format("Mapgeneratedfrom-{0},{1}-at-{2}.png", country, city, DateTime.Now.ToFileTime()));
             }
         }
     }
