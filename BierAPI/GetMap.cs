@@ -80,7 +80,7 @@ namespace BierAPI
                             float longtitude = googlemapsobject.results[0].geometry.location.lng;
 
                             //Bloblocatie opstellen
-                            string blobname = String.Format("Generatedmap-{0},{1}-{2}", city, country, DateTime.Now.ToFileTime());
+                            string blobname = String.Format("Generatedmap-{0},{1}-{2}.png", city, country, DateTime.Now.ToFileTime());
                             string blobcontainerreference = "mapblob";
                             string bloburl = String.Format("https://kanikhierbierdr92ec.blob.core.windows.net/{0}/{1}", blobcontainerreference, blobname);
                             
