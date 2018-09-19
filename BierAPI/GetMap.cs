@@ -97,7 +97,7 @@ namespace BierAPI
                             queue.AddMessage(queueumessage);
 
                             //Bevestig geven dat de request is gelukt en de link waar de map beschikbaar zal worden teruggeven
-                            return req.CreateResponse(HttpStatusCode.OK, "Your request is being processed, your image will be ready at this link in a few seconds: " + bloburl);
+                            return req.CreateResponse(HttpStatusCode.OK, "Your request is being processed, your image will be ready at this link in a few seconds 4Head: " + bloburl);
                         }
                     }
                 }
