@@ -76,8 +76,8 @@ namespace BierAPI
                         else
                         {
                             //Geocoordinaten ophalen voor de locatie
-                            float latitude = googlemapsobject.results[0].geometry.location.lat;
-                            float longtitude = googlemapsobject.results[0].geometry.location.lng;
+                            string latitude = googlemapsobject.results[0].geometry.location.lat;
+                            string longtitude = googlemapsobject.results[0].geometry.location.lng;
 
                             //Bloblocatie opstellen
                             string blobname = String.Format("Generatedmap-{0},{1}-{2}.png", city, country, DateTime.Now.ToFileTime());
