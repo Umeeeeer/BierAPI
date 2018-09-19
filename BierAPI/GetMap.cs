@@ -10,6 +10,8 @@ using System;
 using Newtonsoft.Json;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure;
+using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace BierAPI
 {
@@ -60,6 +62,14 @@ namespace BierAPI
 
             else
             {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=kanikhierbierdr92ec;AccountKey=amIPMHOWpsR9/flak1yiJa/lZ+lktu4rV9ipSH2YHzFYbpNzHXlzMYCanR+YV0Pk2BKRbppxbDyO7HR3kjmXLg==;EndpointSuffix=core.windows.net");
+                CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+                CloudQueue queue = queueClient.GetQueueReference("myqueue-items");
+                queue.CreateIfNotExists();
+                CloudQueueMessage message = new CloudQueueMessage("test");
+                queue.AddMessage(message);
+                return req.CreateResponse(HttpStatusCode.OK, "This is your link: ");
+
                 string address = String.Format("{0}, {1}", city, country);
                 string googleapikey = Environment.GetEnvironmentVariable("GoogleAPIkey");
 
@@ -101,10 +111,10 @@ namespace BierAPI
                                     System.IO.Stream responseStream = await response2.Content.ReadAsStreamAsync();
 
                                     // Retrieve storage account from connection string.
-                                    CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=kanikhierbierdr92ec;AccountKey=amIPMHOWpsR9/flak1yiJa/lZ+lktu4rV9ipSH2YHzFYbpNzHXlzMYCanR+YV0Pk2BKRbppxbDyO7HR3kjmXLg==;EndpointSuffix=core.windows.net");
+                                    CloudStorageAccount storageAccount2 = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=kanikhierbierdr92ec;AccountKey=amIPMHOWpsR9/flak1yiJa/lZ+lktu4rV9ipSH2YHzFYbpNzHXlzMYCanR+YV0Pk2BKRbppxbDyO7HR3kjmXLg==;EndpointSuffix=core.windows.net");
 
                                     // Create the blob client.
-                                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                                    CloudBlobClient blobClient = storageAccount2.CreateCloudBlobClient();
 
                                     // Retrieve a reference to a container.
                                     CloudBlobContainer container = blobClient.GetContainerReference("mapblob");
