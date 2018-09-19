@@ -25,7 +25,7 @@ namespace BierAPI
             string city = req.GetQueryNameValuePairs()
                 .FirstOrDefault(q => string.Compare(q.Key, "city", true) == 0)
                 .Value;
-        
+
             if (city == null)
             {
                 dynamic data = await req.Content.ReadAsAsync<object>();
@@ -43,20 +43,8 @@ namespace BierAPI
                 country = data?.country;
             }
 
-            //Als er geen land is ingevuld direct een foutmelding geven
-            if(country == null)
-            {
-                return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass the countryname on the query string or in the request body");
-            }
-
-            //Als er geen stad is ingevuld direct een foutmelding geven
-            else if(city == null)
-            {
-                return req.CreateResponse(HttpStatusCode.BadRequest, "Please pass the city on the query string or in the request body");
-            }
-
             //Als er wel een stad en land is ingevuld
-            else
+            if(country != null && city != null)
             {
                 //Google api key ophalen en API url opstellen om te checken of de combinatie bestaat en de long en lat op te halen.
                 string googleapikey = Environment.GetEnvironmentVariable("GoogleAPIkey");
@@ -114,7 +102,14 @@ namespace BierAPI
                     }
                 }
             }
-            return req.CreateErrorResponse(HttpStatusCode.InternalServerError, "Please try again later!");
+
+            else
+            {
+                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, "Ër is iets fout gegaan");
+            }
+
+            return null;
         }
     }
 }
+
