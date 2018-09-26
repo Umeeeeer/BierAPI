@@ -13,6 +13,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage.Queue;
 using BierAPI.Model;
+using System.Text;
 
 namespace BierAPI
 {
@@ -96,8 +97,13 @@ namespace BierAPI
                             CloudQueueMessage queueumessage = new CloudQueueMessage(json);
                             queue.AddMessage(queueumessage);
 
-                            //Bevestig geven dat de request is gelukt en de link waar de map beschikbaar zal worden teruggeven
-                            return req.CreateResponse(HttpStatusCode.OK, "Your request is being processed, your image will be ready at this link in a few seconds 4Head: " + bloburl);
+                            var myObj = new { status = "request made", url = bloburl , message = "Your requested map will be available at the url shortly"};
+                            var jsonToReturn = JsonConvert.SerializeObject(myObj);
+
+                            return new HttpResponseMessage(HttpStatusCode.OK)
+                            {
+                                Content = new StringContent(jsonToReturn, Encoding.UTF8, "application/json")
+                            };
                         }
                     }
                 }
@@ -105,7 +111,13 @@ namespace BierAPI
 
             else
             {
-                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, "Ër is iets fout gegaan");
+                var myObj = new { status = "ERROR", message = "Please use a valid country name and city name!" };
+                var jsonToReturn = JsonConvert.SerializeObject(myObj);
+
+                return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(jsonToReturn, Encoding.UTF8, "application/json")
+                };
             }
 
             return null;
