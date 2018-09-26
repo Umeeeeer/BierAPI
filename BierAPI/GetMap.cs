@@ -84,10 +84,11 @@ namespace BierAPI
                             string blobname = String.Format("Generatedmap-{0},{1}-{2}.png", city, country, DateTime.Now.ToFileTime());
                             string blobcontainerreference = "mapblob";
                             CloudStorageAccount account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionKey"));
-                            var cloudBlobClient = account.CreateCloudBlobClient();
-                            var container = cloudBlobClient.GetContainerReference(blobcontainerreference);
-                            var blob = container.GetBlockBlobReference(blobname);
-                            string blobUrl = blob.Uri.AbsoluteUri;
+                            CloudBlobClient cloudBlobClient = account.CreateCloudBlobClient();
+                            CloudBlobContainer container = cloudBlobClient.GetContainerReference(blobcontainerreference);
+                            await container.CreateIfNotExistsAsync();
+                            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobname);
+                            string blobUrl = blockBlob.Uri.AbsoluteUri;
                             
                             //Object voor het doorsturen naar de queue aanmaken
                             QueueStorageMessage message = new QueueStorageMessage(longtitude, latitude, blobname, blobcontainerreference);
