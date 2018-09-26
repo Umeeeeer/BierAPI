@@ -94,7 +94,7 @@ namespace BierAPI
 
                             //Als json string doorsturen naar de queue storage
                             string json = JsonConvert.SerializeObject(message);
-                            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
+                            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionKey"));
                             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
                             CloudQueue queue = queueClient.GetQueueReference("bierapi-queue");
                             queue.CreateIfNotExists();
