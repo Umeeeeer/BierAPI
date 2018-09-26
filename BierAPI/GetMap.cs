@@ -83,7 +83,7 @@ namespace BierAPI
                             //Bloblocatie opstellen
                             string blobname = String.Format("Generatedmap-{0},{1}-{2}.png", city, country, DateTime.Now.ToFileTime());
                             string blobcontainerreference = "mapblob";
-                            CloudStorageAccount account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
+                            CloudStorageAccount account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionKey"));
                             var cloudBlobClient = account.CreateCloudBlobClient();
                             var container = cloudBlobClient.GetContainerReference(blobcontainerreference);
                             var blob = container.GetBlockBlobReference(blobname);
