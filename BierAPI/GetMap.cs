@@ -83,21 +83,25 @@ namespace BierAPI
                             //Bloblocatie opstellen
                             string blobname = String.Format("Generatedmap-{0},{1}-{2}.png", city, country, DateTime.Now.ToFileTime());
                             string blobcontainerreference = "mapblob";
-                            string bloburl = String.Format("https://kanikhierbierdr92ec.blob.core.windows.net/{0}/{1}", blobcontainerreference, blobname);
+                            CloudStorageAccount account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
+                            var cloudBlobClient = account.CreateCloudBlobClient();
+                            var container = cloudBlobClient.GetContainerReference(blobcontainerreference);
+                            var blob = container.GetBlockBlobReference(blobname);
+                            string blobUrl = blob.Uri.AbsoluteUri;
                             
                             //Object voor het doorsturen naar de queue aanmaken
                             QueueStorageMessage message = new QueueStorageMessage(longtitude, latitude, blobname, blobcontainerreference);
 
                             //Als json string doorsturen naar de queue storage
                             string json = JsonConvert.SerializeObject(message);
-                            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageAccountKey"));
+                            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
                             CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
                             CloudQueue queue = queueClient.GetQueueReference("bierapi-queue");
                             queue.CreateIfNotExists();
                             CloudQueueMessage queueumessage = new CloudQueueMessage(json);
                             queue.AddMessage(queueumessage);
 
-                            var myObj = new { status = "request made", url = bloburl , message = "Your requested map will be available at the url shortly"};
+                            var myObj = new { status = "request made", url = blobUrl, message = "Your requested map will be available at the url shortly"};
                             var jsonToReturn = JsonConvert.SerializeObject(myObj);
 
                             return new HttpResponseMessage(HttpStatusCode.OK)
