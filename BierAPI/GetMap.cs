@@ -85,7 +85,7 @@ namespace BierAPI
                                 //Bloblocatie opstellen
                                 string blobname = String.Format("Generatedmap-{0},{1}-{2}.png", city, country, DateTime.Now.ToFileTime());
                                 string blobcontainerreference = "mapblob";
-                                CloudStorageAccount account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionKey"));
+                                CloudStorageAccount account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
                                 string blobUrl = account.BlobStorageUri.PrimaryUri.AbsoluteUri + "/" + blobcontainerreference + "/" + blobname;
                                 log.Info("bloburl= " + blobUrl);
 
@@ -94,7 +94,7 @@ namespace BierAPI
 
                                 //Als json string doorsturen naar de queue storage
                                 string json = JsonConvert.SerializeObject(message);
-                                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionKey"));
+                                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
                                 CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
                                 CloudQueue queue = queueClient.GetQueueReference("bierapi-queue");
                                 queue.CreateIfNotExists();
