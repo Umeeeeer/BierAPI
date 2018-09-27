@@ -87,7 +87,7 @@ namespace BierAPI
                                 string blobcontainerreference = "mapblob";
                                 log.Info(Environment.GetEnvironmentVariable("StorageConnectionString"));
                                 CloudStorageAccount account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageConnectionString"));
-                                string blobUrl = account.BlobStorageUri.PrimaryUri.AbsoluteUri + "/" + blobcontainerreference + "/" + blobname;
+                                string blobUrl = account.BlobStorageUri.PrimaryUri.AbsoluteUri + blobcontainerreference + "/" + blobname;
                                 log.Info("bloburl= " + blobUrl);
 
                                 //Object voor het doorsturen naar de queue aanmaken
